@@ -1,11 +1,24 @@
 import asyncio
 from database import Prisma
+import database
 
 # Prisma Database Implementation for Solar Car Drive API project
 
 #Initialize with Database(), immediately call connect() to connect to database
 #Call disconnect() to disconnect from database
 
+
+# db = Database()
+# db.connect()
+
+# data = {
+#     "FileID": id,
+#     "Division": "",
+#     "FileName": name,
+#     "Cycle": "",
+#     "OldData": "true",
+# }
+# db.createEntry(data)
 
 class Database:
     def __init__(self):

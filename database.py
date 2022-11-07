@@ -1,6 +1,5 @@
 import asyncio
-from database import Prisma
-import database
+import prisma
 
 # Prisma Database Implementation for Solar Car Drive API project
 
@@ -30,7 +29,7 @@ class Database:
 
     # Connect to the database
     async def connect(self):
-        self.db = Prisma()
+        self.db = prisma.Prisma()
         await self.db.connect()
 
 

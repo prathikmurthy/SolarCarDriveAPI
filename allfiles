@@ -44,27 +44,29 @@ def main():
         if not items:
             print('No files found.')
             return
-        allfiles = []   #array to store all files 
-        allfiles.append(items[0]["name"])
-        np = results["nextPageToken"]
-        # print(u'{0} ({1})'.format(item['name'], item['id']))    #prints file name and id
-        nP = results["nextPageToken"]
-        for i in range(100):
-            results = service.files().list(
-                driveId="0ALT8V7p0m5I5Uk9PVA", includeItemsFromAllDrives=True, corpora="drive", supportsAllDrives=True, pageSize=1000, pageToken = nP, fields="nextPageToken, files(id, name)").execute()  # page token max value is 1000
-            it = results.get('files', [])
-            np = results["nextPageToken"]
-            for j in it:
-                if j["name"] not in allfiles:
-                    allfiles.append(j["name"])
+        with open("output.txt", "w") as f:
+            f.write(items[0]["name"])
+            np = results.get('nextPageToken', None)
+            filecount = 0
+            for i in range(150):
+                results = service.files().list(
+                    driveId="0ALT8V7p0m5I5Uk9PVA", includeItemsFromAllDrives=True, corpora="drive", supportsAllDrives=True, pageSize=1000, pageToken = np, fields="nextPageToken, files(id, name)").execute()  # page token max value is 1000
+                it = results.get('files', [])
+                np = results.get('nextPageToken', None)
+                for j in it:
+                    #if j["name"] not in allfiles:
+                        #allfiles.append(j["name"])
+                        f.write(j["name"])
+                        f.write('\n')
+                        filecount +=1 
             
         #pagetoken = service.changes().getStartPageToken(driveId="0ALT8V7p0m5I5Uk9PVA",supportsAllDrives=True).execute()
         #pagetoken = pagetoken.get("startPageToken")
         #print(pagetoken)
         #pagetoken stuff
-            
-        print(len(allfiles))
-        print(allfiles[0:10])
+        print(filecount)
+        #print(len(allfiles))
+        #print(allfiles[0:10])
     except HttpError as error:
     # TODO(developer) - Handle errors from drive API.
             print(f'An error occurred: {error}')

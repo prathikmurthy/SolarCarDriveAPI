@@ -24,8 +24,14 @@ class Database:
         self.db = None
 
     def __del__(self):
-        if self.db is not None:
-            self.disconnect()
+        try:
+            loop = asyncio.get_event_loop()
+            if loop.is_running():
+                loop.create_task(self.session.disconnect())
+            else:
+                loop.run_until_complete(self.session.disconnect())
+        except Exception:
+            pass
 
     # Connect to the database
     async def connect(self):
@@ -56,9 +62,13 @@ class Database:
         #    "Cycle": "xxx",
         #    "OldData": "xxx",
         # }
-        
-        entry = await self.db.file.create(data=data)
-        return entry
+        try:
+            entry = await self.db.file.create(data=data)
+            return entry
+        except Exception as e:
+            print("CREATE FAILED, SKIPPING\n")
+            print(e)
+            return None
 
     async def update_file(self, file_id, data):
 

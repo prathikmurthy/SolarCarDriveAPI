@@ -24,8 +24,19 @@ class Database:
         self.db = None
 
     def __del__(self):
+<<<<<<< HEAD
         if self.db is not None:
             self.disconnect()
+=======
+        try:
+            loop = asyncio.get_event_loop()
+            if loop.is_running():
+                loop.create_task(self.session.disconnect())
+            else:
+                loop.run_until_complete(self.session.disconnect())
+        except Exception:
+            pass
+>>>>>>> ba6e923799c6405d68eb6dc14e6e001461bfcfff
 
     # Connect to the database
     async def connect(self):
